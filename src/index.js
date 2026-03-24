@@ -24,8 +24,15 @@ io.on('connection', (socket) => {
     //     // socket.emit('countUpdated', count) This emits event to a specific connection
     //     io.emit('countUpdated', count) //This emits an event to all connections
     // })
-    socket.emit('message', generateMessage('Welcome!'))
-    socket.broadcast.emit('message', generateMessage('A new user has joined!'))
+    // socket.emit('message', generateMessage('Welcome!'))
+    // socket.broadcast.emit('message', generateMessage('A new user has joined!'))
+
+    socket.on('join', ({ username, room }) => {
+        socket.join(room)
+
+        socket.emit('message', generateMessage('Welcome!'))
+        socket.broadcast.to(room).emit('message', generateMessage(`${username} has joined!`))
+    })
 
     socket.on('sendMessage', (message, callback) => {
         const filter = new Filter()
